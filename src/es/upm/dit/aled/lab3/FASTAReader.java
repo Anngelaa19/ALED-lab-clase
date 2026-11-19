@@ -136,7 +136,18 @@ public class FASTAReader {
 	 * pattern when one has been found to be different.
 	 */
 	private boolean compareImproved(byte[] pattern, int position) throws FASTAException {
-		//TODO
+		if (position + pattern.length > validBytes) {
+			throw new FASTAException("Pattern goes beyond the end of the file");
+		}
+		
+		for (int i=0; i<pattern.length;i++) {
+			if(pattern[i] != content[position + i]) {
+				return false;
+			}
+		}
+		return true;
+		}
+		
 
 	/*
 	 * Improved version of the compare method that returns the number of bytes in
@@ -147,7 +158,16 @@ public class FASTAReader {
 	 * ones present in the indicated position.
 	 */
 	private int compareNumErrors(byte[] pattern, int position) throws FASTAException {
-		//TODO
+		if (position + pattern.length > validBytes) {
+			throw new FASTAException("Pattern goes beyond the end of the file");
+		}
+		int contador=0	;
+		for(int i=0; i<pattern.length;i++) {
+			if (pattern[i]!= content[position + i]) {
+				contador ++;
+			}
+		}
+		return contador;
 	}
 
 	/**
@@ -163,17 +183,16 @@ public class FASTAReader {
 		List <Integer> positions = new ArrayList();
 	for (int i =0; i<validBytes ;i++) {
 		try {
-			if(compare(pattern, i)){
+			if(compareImproved(pattern,i)) {
 				positions.add(i);
 			}
 		}
-			catch(FASTAException e) {
-				break;
-			
-			}
-		return positions
-				;
+		catch(FASTAException e) {
+			break;
+		}	
+				
 		}
+	return positions;
 	
 		
 	}
@@ -191,7 +210,17 @@ public class FASTAReader {
 	 *         pattern (with up to 1 errors) in the data.
 	 */
 	public List<Integer> searchSNV(byte[] pattern) {
-		//TODO
+		List <Integer> positions = new ArrayList<>();
+		for(int i=0;i< validBytes;i++) {
+			try {
+				if (compareNumErrors(pattern,i)<=1) {
+					positions.add(i);
+				}
+			} catch (FASTAException e) {
+				break;
+			}
+		}
+		return positions;
 	}
 
 	public static void main(String[] args) {
