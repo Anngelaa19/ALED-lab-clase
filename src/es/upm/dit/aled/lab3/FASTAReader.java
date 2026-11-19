@@ -136,16 +136,7 @@ public class FASTAReader {
 	 * pattern when one has been found to be different.
 	 */
 	private boolean compareImproved(byte[] pattern, int position) throws FASTAException {
-		if(position + pattern.length > validBytes) {
-			throw new FASTAException ("Pattern goes beyond the end of the file");
-			}
-		for (int i=0;i<pattern.length;i++) {
-			if(pattern[i] != content[position + i]) {
-				return false;
-			}
-		}
-		return true; 
-		}
+		//TODO
 
 	/*
 	 * Improved version of the compare method that returns the number of bytes in
@@ -156,16 +147,7 @@ public class FASTAReader {
 	 * ones present in the indicated position.
 	 */
 	private int compareNumErrors(byte[] pattern, int position) throws FASTAException {
-		if (position + pattern.length > validBytes){
-			throw new FASTAException ("Pattern gos beyond the end of the file");
-		}
-		int errors=0;
-		for(int i=0; i<pattern.length;i++) {
-			if(pattern[i] != content[position + i]) {
-				errors++;
-			}
-		}
-		return errors;
+		//TODO
 	}
 
 	/**
@@ -178,21 +160,21 @@ public class FASTAReader {
 	 *         pattern in the data.
 	 */
 	public List<Integer> search(byte[] pattern) {
-		
-		List<Integer> results = new ArrayList<>();
-		if (pattern == null || pattern.length == 0) return results;
-
-	    for (int i = 0; i <= validBytes - pattern.length; i++) {
-	        try {
-	            if (compareImproved(pattern, i)) {
-	                results.add(i);
-	            }
-	        } catch (FASTAException e) {
-	            
-	            break;
-	        }
-	    }
-	    return results;
+		List <Integer> positions = new ArrayList();
+	for (int i =0; i<validBytes ;i++) {
+		try {
+			if(compare(pattern, i)){
+				positions.add(i);
+			}
+		}
+			catch(FASTAException e) {
+				break;
+			
+			}
+		return positions
+				;
+		}
+	
 		
 	}
 
@@ -209,17 +191,7 @@ public class FASTAReader {
 	 *         pattern (with up to 1 errors) in the data.
 	 */
 	public List<Integer> searchSNV(byte[] pattern) {
-		List<Integer> res = new ArrayList<>();
-		for (int i=0; i<validBytes -1;i++) {
-			try {
-				if (compareNumErrors(pattern,i)==0||compareNumErrors(pattern,i)==1) {
-					res.add(i);
-				}
-			}catch(FASTAException e) {
-				break;
-			}
-		}
-		return res;
+		//TODO
 	}
 
 	public static void main(String[] args) {
